@@ -3,6 +3,7 @@ To run the dashboard locally:
 Clone the repository (if not already done):
 
 git clone https://github.com/kaoukaoua/droneproject.git
+
 cd droneproject
 
 
