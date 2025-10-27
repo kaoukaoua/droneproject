@@ -1,0 +1,28 @@
+﻿DroneID,TimePoint,SwarmID,TaskID,State,PositionX,PositionY,PositionZ,VelocityX,VelocityY,VelocityZ,Pitch,Roll,Yaw,Battery Percentage,Detection Range(Circle),Singal Intensity(At most 5),Video FeedbackOn
+1,TP1,-1,-1,Taking Off,6,5,7,2.1,2.3,1.04,22.1,2.3,48.2,98,50,5,Yes
+1,TP2,1,-1,Entering Swarm,21,23,10.4,1.9,2.56,0.94,18.4,-1.5,52.7,98,50,5,Yes
+1,TP3,1,-1,Hovering,40,48.6,19.8,2.16,2.2,1.1,21.9,3.2,49.5,96,50,4,Yes
+1,TP4,1,-1,Passing By,61.6,70.6,30.8,2.19,2,1.11,24.1,3,49.7,95,50,5,Yes
+1,TP5,1,-1,Passing By,83.5,90.6,41.9,2.05,1.95,1.08,24.8,2.5,50.2,93,50,5,Yes
+1,TP6,1,-1,Hovering,88,96.3,52.7,2.05,1.95,1.08,25.3,2.8,50,91,50,5,Yes
+2,TP1,-1,-1,Taking Off,96,40,20,-2.1,0.96,0.04,0.9,-2.5,160.1,100,50,4,No
+2,TP2,-1,-1,Passing By,75,49.6,20.4,-2.24,1.04,-0.02,-1.1,4.1,155.3,98,50,5,Yes
+2,TP3,1,1,Entering Swarm,52.6,60,20.2,-2.6,0.92,0.06,1.2,-3.7,158.2,97,50,3,Yes
+2,TP4,1,1,Attacking,26.6,69.2,20.8,-2.3,0.9,0.06,1.3,-3.3,158.6,95,50,5,Yes
+2,TP5,1,1,Attacking,3.6,78.2,21.4,-2.1,0.95,0.05,1.1,-3,158,93,50,5,Yes
+2,TP6,1,1,Returning,-17.4,87.7,21.9,-2.1,0.95,0.05,0.9,-2.5,157.5,91,50,5,Yes
+3,TP1,-1,-1,Taking Off,5,5,10,2.04,1.7,0.56,15.4,1.8,-41.1,91,50,4,No
+3,TP2,-1,-1,Passing By,20.4,17,15.6,1.94,1.56,0.46,12.8,-2.6,-36.9,89,50,4,No
+3,TP3,2,2,Entering Swarm,39.8,32.6,20.2,2.1,1.64,0.54,14.9,3.1,-39.8,88,50,5,No
+3,TP4,2,2,Hovering,60.8,49,25.6,2.6,1.33,0.79,15.1,3.2,-39.1,85,50,3,Yes
+3,TP5,2,2,Hovering,82.8,62.3,33.5,2.5,1.2,0.75,15.5,2.8,-38.5,83,50,3,Yes
+3,TP6,2,2,Hovering,89.8,74.3,41,2.5,1.2,0.75,15.8,3,-38,81,50,2,Yes
+4,TP1,-1,-1,Taking Off,80,40,3,-1.4,2.1,1.06,28.9,-3.4,-126.5,95,50,5,No
+4,TP2,-1,-1,Passing By,66,41,10.6,-1.28,1.92,0.96,25.2,2.8,-121.7,95,50,5,No
+4,TP3,2,2,Entering Swarm,59.2,50.7,16.6,-1.42,2.04,1.02,27.6,-4.6,-124.9,94,50,5,No
+4,TP4,2,2,Parachute Deployment,52.6,60.2,20.2,-1.55,2.12,1.31,27.9,-4.2,-125.9,93,50,3,No
+4,TP5,2,2,Descending,39,50.6,30.4,-1.6,2,1.25,28.2,-4,-126.5,91,50,3,No
+4,TP6,2,2,Descending,23.5,41.8,43.5,-1.6,2,1.25,28.6,-3.8,-127,89,50,4,No
+,,,,,,,,,,,,,,,,,
+,"-1 at SwarmID column means the drone does not belong to any swarm, and -1 at TaskID column means the drone is currently not performing any task.",,,,,,,,,,,,,,,,
+,"Suppose the bottom left corner of the map is (0, 0), and the top right corner is (100, 100) for the position.",,,,,,,,,,,,,,,,
