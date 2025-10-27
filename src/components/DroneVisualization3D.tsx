@@ -83,6 +83,29 @@ export default function DroneVisualization3D({ data, currentFrame }: Props) {
       ctx.fill();
       ctx.stroke();
 
+      if (drone.SignalIntensity !== undefined) {
+        const signalRings = drone.SignalIntensity;
+        for (let i = 1; i <= signalRings; i++) {
+          ctx.globalAlpha = 0.2 - (i * 0.03);
+          ctx.strokeStyle = '#FFD700';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(x, y, batteryScale + (i * 8), 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+      }
+
+      if (drone.VideoFeedbackOn === 'Yes') {
+        ctx.fillStyle = '#00FF00';
+        ctx.beginPath();
+        ctx.arc(x, y - batteryScale - 8, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
       const vScale = 20;
       const vx = drone.VelocityX * vScale;
       const vy = -drone.VelocityY * vScale;
@@ -114,6 +137,9 @@ export default function DroneVisualization3D({ data, currentFrame }: Props) {
       ctx.fillText(`D${drone.DroneID}`, x + batteryScale + 5, y - 5);
       ctx.fillText(`Z:${drone.PositionZ.toFixed(1)}`, x + batteryScale + 5, y + 5);
       ctx.fillText(`${drone.State}`, x + batteryScale + 5, y + 15);
+      if (drone.SignalIntensity !== undefined) {
+        ctx.fillText(`Sig:${drone.SignalIntensity}`, x + batteryScale + 5, y + 25);
+      }
     });
 
   }, [data, currentFrame]);
@@ -127,18 +153,55 @@ export default function DroneVisualization3D({ data, currentFrame }: Props) {
         height={600}
         className="border border-gray-300 rounded"
       />
-      <div className="mt-4 flex gap-4 flex-wrap">
-        {Object.entries(SWARM_COLORS).map(([swarmId, color]) => (
-          <div key={swarmId} className="flex items-center gap-2">
-            <div
-              className="w-4 h-4 rounded"
-              style={{ backgroundColor: color }}
-            />
-            <span className="text-sm">
-              Swarm {swarmId === '-1' ? 'Unassigned' : swarmId}
-            </span>
+      <div className="mt-4 grid grid-cols-2 gap-6">
+        <div>
+          <h3 className="text-sm font-semibold mb-2 text-slate-700">Swarm Colors</h3>
+          <div className="flex gap-4 flex-wrap">
+            {Object.entries(SWARM_COLORS).map(([swarmId, color]) => (
+              <div key={swarmId} className="flex items-center gap-2">
+                <div
+                  className="w-4 h-4 rounded"
+                  style={{ backgroundColor: color }}
+                />
+                <span className="text-sm">
+                  Swarm {swarmId === '-1' ? 'Unassigned' : swarmId}
+                </span>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+        <div>
+          <h3 className="text-sm font-semibold mb-2 text-slate-700">Visual Encodings</h3>
+          <div className="space-y-1 text-sm text-slate-600">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full border-2 border-slate-400"></div>
+              <span>Circle size = Battery level</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-slate-200"></div>
+              <span>Faded circle = Detection range</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="flex">
+                <div className="w-2 h-2 rounded-full border border-yellow-500"></div>
+                <div className="w-2 h-2 rounded-full border border-yellow-500 -ml-1"></div>
+                <div className="w-2 h-2 rounded-full border border-yellow-500 -ml-1"></div>
+              </div>
+              <span>Gold rings = Signal intensity (1-5)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              <span>Green dot = Video feedback active</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center">
+                <div className="w-4 h-0.5 bg-slate-400"></div>
+                <div className="w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-t-4 border-t-slate-400 -ml-1"></div>
+              </div>
+              <span>Arrow = Velocity direction</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

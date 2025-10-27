@@ -5,6 +5,7 @@ import { parseDroneCSV, getTimePoints, getDataForTimePoint, calculateSwarmBatter
 import DroneVisualization3D from './components/DroneVisualization3D';
 import BatteryTimeline from './components/BatteryTimeline';
 import StateHeatmap from './components/StateHeatmap';
+import SignalVideoStats from './components/SignalVideoStats';
 
 function App() {
   const [allData, setAllData] = useState<DroneData[]>([]);
@@ -16,7 +17,7 @@ function App() {
   useEffect(() => {
     async function loadData() {
       try {
-        const response = await fetch('/DroneData.csv');
+        const response = await fetch('/Sample Data_A2.csv');
         const csvText = await response.text();
         const parsed = await parseDroneCSV(csvText);
         setAllData(parsed);
@@ -148,6 +149,10 @@ function App() {
 
         <div className="grid gap-8 mb-8">
           <DroneVisualization3D data={currentFrameData} currentFrame={currentFrameIndex} />
+        </div>
+
+        <div className="grid gap-8 mb-8">
+          <SignalVideoStats data={currentFrameData} timePoint={currentTimePoint} />
         </div>
 
         <div className="grid gap-8 mb-8">

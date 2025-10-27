@@ -32,6 +32,8 @@ export async function parseDroneCSV(csvText: string): Promise<DroneData[]> {
       Yaw: parseFloat(row['Yaw']),
       BatteryPercentage: parseFloat(row['Battery Percentage']),
       DetectionRange: parseFloat(row['Detection Range(Circle)']),
+      SignalIntensity: row['Singal Intensity(At most 5)'] ? parseFloat(row['Singal Intensity(At most 5)']) : undefined,
+      VideoFeedbackOn: row['Video FeedbackOn'] || undefined,
     };
 
     data.push(normalizedRow);

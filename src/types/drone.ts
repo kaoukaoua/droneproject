@@ -15,6 +15,8 @@ export interface DroneData {
   Yaw: number;
   BatteryPercentage: number;
   DetectionRange: number;
+  SignalIntensity?: number;
+  VideoFeedbackOn?: string;
 }
 
 export interface SwarmTimeline {
