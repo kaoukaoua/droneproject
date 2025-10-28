@@ -44,7 +44,10 @@ export default function BatteryTimeline({ data }: Props) {
     const minBattery = Math.min(...data.map(d => d.avgBattery)) - 5;
     const maxBattery = 100;
 
-    const scaleX = (index: number) => padding.left + (plotWidth / (timePoints.length - 1)) * index;
+    const scaleX = (index: number) => {
+      if (timePoints.length === 1) return padding.left + plotWidth / 2;
+      return padding.left + (plotWidth / (timePoints.length - 1)) * index;
+    };
     const scaleY = (battery: number) => padding.top + plotHeight - ((battery - minBattery) / (maxBattery - minBattery)) * plotHeight;
 
     ctx.strokeStyle = '#e0e0e0';

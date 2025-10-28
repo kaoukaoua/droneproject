@@ -15,6 +15,15 @@ const SWARM_COLORS: { [key: number]: string } = {
 
 export default function DroneVisualization3D({ data, currentFrame }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mapImageRef = useRef<HTMLImageElement | null>(null);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = '/Picture1.png';
+    img.onload = () => {
+      mapImageRef.current = img;
+    };
+  }, []);
 
   useEffect(() => {
     if (!canvasRef.current || data.length === 0) return;
@@ -34,29 +43,43 @@ export default function DroneVisualization3D({ data, currentFrame }: Props) {
     const yMax = Math.max(...data.map(d => d.PositionY)) + 10;
     const zMax = Math.max(...data.map(d => d.PositionZ)) + 10;
 
-    const scaleX = (x: number) => ((x - xMin) / (xMax - xMin)) * (width - 100) + 50;
+    const scaleX = (x: number) => ((x / 100)) * (width - 100) + 50;
     const scaleY = (y: number, z: number) => {
-      const yNorm = ((y - yMin) / (yMax - yMin)) * (height - 150) + 50;
+      const yNorm = ((100 - y) / 100) * (height - 150) + 50;
       const zOffset = (z / zMax) * 50;
       return yNorm - zOffset;
     };
 
-    ctx.fillStyle = '#f0f0f0';
+    ctx.fillStyle = '#f8f8f8';
     ctx.fillRect(0, 0, width, height);
 
-    ctx.strokeStyle = '#ccc';
+    if (mapImageRef.current) {
+      ctx.save();
+      ctx.globalAlpha = 0.4;
+      const padding = 50;
+      ctx.drawImage(
+        mapImageRef.current,
+        padding,
+        padding,
+        width - padding * 2,
+        height - padding * 2 - 50
+      );
+      ctx.restore();
+    }
+
+    ctx.strokeStyle = '#ddd';
     ctx.lineWidth = 1;
     for (let i = 0; i <= 10; i++) {
-      const x = (width / 10) * i;
+      const x = 50 + ((width - 100) / 10) * i;
       ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, height);
+      ctx.moveTo(x, 50);
+      ctx.lineTo(x, height - 100);
       ctx.stroke();
 
-      const y = (height / 10) * i;
+      const y = 50 + ((height - 150) / 10) * i;
       ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(width, y);
+      ctx.moveTo(50, y);
+      ctx.lineTo(width - 50, y);
       ctx.stroke();
     }
 
