@@ -19,7 +19,7 @@ export default function DroneVisualization3D({ data, currentFrame }: Props) {
 
   useEffect(() => {
     const img = new Image();
-    img.src = 'Picture1.png';
+    img.src = '/Picture1.png';
     img.onload = () => {
       mapImageRef.current = img;
     };
