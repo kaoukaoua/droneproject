@@ -13,17 +13,57 @@ const SWARM_COLORS: { [key: number]: string } = {
   '3': '#28a745',
 };
 
+function drawCampusMap(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number) {
+  const padding = 20;
+  const inner = { x: x + padding, y: y + padding, w: width - padding * 2, h: height - padding * 2 };
+
+  ctx.fillStyle = '#c8e6c9';
+  ctx.fillRect(inner.x, inner.y, inner.w, inner.h);
+
+  ctx.fillStyle = '#81c784';
+  const greenSpots = [
+    { x: 0.15, y: 0.2, w: 0.25, h: 0.25 },
+    { x: 0.65, y: 0.15, w: 0.28, h: 0.2 },
+    { x: 0.1, y: 0.65, w: 0.2, h: 0.28 },
+    { x: 0.7, y: 0.65, w: 0.25, h: 0.25 },
+  ];
+  greenSpots.forEach(spot => {
+    ctx.fillRect(inner.x + spot.x * inner.w, inner.y + spot.y * inner.h, spot.w * inner.w, spot.h * inner.h);
+  });
+
+  ctx.fillStyle = '#fff';
+  const buildings = [
+    { x: 0.2, y: 0.35, w: 0.15, h: 0.2 },
+    { x: 0.5, y: 0.3, w: 0.18, h: 0.25 },
+    { x: 0.75, y: 0.4, w: 0.15, h: 0.2 },
+    { x: 0.3, y: 0.75, w: 0.2, h: 0.15 },
+  ];
+  buildings.forEach(building => {
+    ctx.fillRect(inner.x + building.x * inner.w, inner.y + building.y * inner.h, building.w * inner.w, building.h * inner.h);
+    ctx.strokeStyle = '#999';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(inner.x + building.x * inner.w, inner.y + building.y * inner.h, building.w * inner.w, building.h * inner.h);
+  });
+
+  ctx.strokeStyle = '#aaa';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([5, 5]);
+  const pathX = inner.x + inner.w * 0.45;
+  const pathY1 = inner.y + inner.h * 0.1;
+  const pathY2 = inner.y + inner.h * 0.9;
+  ctx.beginPath();
+  ctx.moveTo(pathX, pathY1);
+  ctx.lineTo(pathX, pathY2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.strokeStyle = '#999';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(inner.x, inner.y, inner.w, inner.h);
+}
+
 export default function DroneVisualization3D({ data, currentFrame }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mapImageRef = useRef<HTMLImageElement | null>(null);
-
-  useEffect(() => {
-    const img = new Image();
-    img.src = '/Picture1.png';
-    img.onload = () => {
-      mapImageRef.current = img;
-    };
-  }, []);
 
   useEffect(() => {
     if (!canvasRef.current || data.length === 0) return;
@@ -37,10 +77,6 @@ export default function DroneVisualization3D({ data, currentFrame }: Props) {
 
     ctx.clearRect(0, 0, width, height);
 
-    const xMin = Math.min(...data.map(d => d.PositionX)) - 10;
-    const xMax = Math.max(...data.map(d => d.PositionX)) + 10;
-    const yMin = Math.min(...data.map(d => d.PositionY)) - 10;
-    const yMax = Math.max(...data.map(d => d.PositionY)) + 10;
     const zMax = Math.max(...data.map(d => d.PositionZ)) + 10;
 
     const scaleX = (x: number) => ((x / 100)) * (width - 100) + 50;
@@ -50,24 +86,15 @@ export default function DroneVisualization3D({ data, currentFrame }: Props) {
       return yNorm - zOffset;
     };
 
-    ctx.fillStyle = '#f8f8f8';
+    ctx.fillStyle = '#f0f4f8';
     ctx.fillRect(0, 0, width, height);
 
-    if (mapImageRef.current) {
-      ctx.save();
-      ctx.globalAlpha = 0.4;
-      const padding = 50;
-      ctx.drawImage(
-        mapImageRef.current,
-        padding,
-        padding,
-        width - padding * 2,
-        height - padding * 2 - 50
-      );
-      ctx.restore();
-    }
+    ctx.save();
+    ctx.globalAlpha = 0.25;
+    drawCampusMap(ctx, 50, 50, width - 100, height - 100);
+    ctx.restore();
 
-    ctx.strokeStyle = '#ddd';
+    ctx.strokeStyle = '#e8eef7';
     ctx.lineWidth = 1;
     for (let i = 0; i <= 10; i++) {
       const x = 50 + ((width - 100) / 10) * i;

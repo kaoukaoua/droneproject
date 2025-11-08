@@ -1,39 +1,49 @@
 import { DroneData } from '../types/drone';
 
 export async function parseDroneCSV(csvText: string): Promise<DroneData[]> {
-  const lines = csvText.trim().split('\n');
-  const headers = lines[0].split(',');
+  const lines = csvText.trim().split('\n').filter(line => line.trim());
+  const headers = lines[0].split(',').map(h => h.trim());
 
   const data: DroneData[] = [];
 
   for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split(',');
-    if (values.length !== headers.length) continue;
+    const line = lines[i].trim();
+    if (!line || line.startsWith('"-1')) continue;
+
+    const values = line.split(',').map(v => v.trim());
+    if (values.length < 16) continue;
 
     const row: any = {};
     headers.forEach((header, index) => {
-      row[header.trim()] = values[index].trim();
+      if (index < values.length) {
+        row[header] = values[index];
+      }
     });
 
+    if (!row['DroneID'] || !row['TimePoint']) continue;
+
+    const droneId = parseInt(row['DroneID']);
+    if (isNaN(droneId)) continue;
+
     const normalizedRow: DroneData = {
-      DroneID: parseInt(row['DroneID']),
+      DroneID: droneId,
       TimePoint: row['TimePoint'],
-      SwarmID: parseInt(row['SwarmID']),
+      SwarmID: parseInt(row['SwarmID']) || -1,
       TaskID: isNaN(parseInt(row['TaskID'])) ? row['TaskID'] : parseInt(row['TaskID']),
-      State: row['State'],
-      PositionX: parseFloat(row['PositionX']),
-      PositionY: parseFloat(row['PositionY']),
-      PositionZ: parseFloat(row['PositionZ']),
-      VelocityX: parseFloat(row['VelocityX']),
-      VelocityY: parseFloat(row['VelocityY']),
-      VelocityZ: parseFloat(row['VelocityZ']),
-      Pitch: parseFloat(row['Pitch']),
-      Roll: parseFloat(row['Roll']),
-      Yaw: parseFloat(row['Yaw']),
-      BatteryPercentage: parseFloat(row['Battery Percentage']),
-      DetectionRange: parseFloat(row['Detection Range(Circle)']),
+      State: row['State'] || 'Unknown',
+      PositionX: parseFloat(row['PositionX']) || 0,
+      PositionY: parseFloat(row['PositionY']) || 0,
+      PositionZ: parseFloat(row['PositionZ']) || 0,
+      VelocityX: parseFloat(row['VelocityX']) || 0,
+      VelocityY: parseFloat(row['VelocityY']) || 0,
+      VelocityZ: parseFloat(row['VelocityZ']) || 0,
+      Pitch: parseFloat(row['Pitch']) || 0,
+      Roll: parseFloat(row['Roll']) || 0,
+      Yaw: parseFloat(row['Yaw']) || 0,
+      BatteryPercentage: parseFloat(row['Battery Percentage']) || 0,
+      DetectionRange: parseFloat(row['Detection Range(Circle)']) || 0,
       SignalIntensity: row['Singal Intensity(At most 5)'] ? parseFloat(row['Singal Intensity(At most 5)']) : undefined,
-      VideoFeedbackOn: row['Video FeedbackOn'] || undefined,
+      VideoFeedbackOn: row['Video FeedbackOn'] ? row['Video FeedbackOn'].toLowerCase() === 'yes' ? 'Yes' : 'No' : undefined,
     };
 
     data.push(normalizedRow);
